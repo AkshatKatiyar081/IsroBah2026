@@ -1,4 +1,4 @@
-# ISRO Hackathon 2026 — Team Airheads
+# ISRO Hackathon 2026 — Team AirHeads
 
 This repository contains the complete implementation for our submission to the **ISRO Hackathon 2026**. Our work tackles complex, large-scale atmospheric problems using state-of-the-art satellite data processing, machine learning, and physics-informed neural networks. The repository is structured into two main objectives:
 
