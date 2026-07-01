@@ -1,0 +1,8 @@
+{
+  "PM2.5": true,
+  "PM10": true,
+  "NO2": true,
+  "SO2": true,
+  "O3": true,
+  "CO": true
+}

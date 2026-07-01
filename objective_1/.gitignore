@@ -1,0 +1,5 @@
+# Ignore large data and model files to prevent GitHub limits
+*.npy
+*.pkl
+*.keras
+__pycache__/

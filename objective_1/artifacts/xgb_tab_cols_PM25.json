@@ -1,0 +1,21 @@
+[
+  "lat",
+  "lon",
+  "elevation",
+  "doy",
+  "lag_PM25_D1",
+  "lag_PM25_D2",
+  "lag_AOD_D1",
+  "lag_NO2_D1",
+  "lag_CO_D1",
+  "ventilation_index",
+  "wind_direction",
+  "t2m_squared",
+  "AOD_center",
+  "NO2_center",
+  "solar_radiation",
+  "BLH_center",
+  "wind_speed_center",
+  "AOD_center_ratio",
+  "RH_center"
+]

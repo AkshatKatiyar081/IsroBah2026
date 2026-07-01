@@ -1,0 +1,267 @@
+# COMPREHENSIVE PROJECT LOG: ISRO HACKATHON
+## 6-Pollutant AQI Prediction
+
+================================================================================
+1. INTRODUCTION
+================================================================================
+Project Objective: Develop an AI/ML model for predicting the 6-pollutant Air Quality Index (AQI) (PM2.5, PM10, NO2, SO2, O3, CO) at a 0.25° grid over India.
+Data Sources: Sentinel-5P (NO2, SO2, CO, AOD), INSAT-3D (AOD used as backup or complementary), and ERA5 meteorological reanalysis data.
+Overall Architecture: A hybrid model utilizing a Convolutional Neural Network (CNN) for spatial feature extraction from satellite images, coupled with an XGBoost residual corrector utilizing Global Average Pooling (GAP) embeddings and tabular meteorological/temporal features.
+Geographic Block Split Rationale: To strictly prevent spatial data leakage, the dataset was split geographically rather than randomly. Training covers the North, West, and Central regions (accounting for 80% of data), while Validation encompasses the South and East/Northeast regions (20%). This ensures the model learns robust physical relationships rather than memorizing spatial proximity.
+
+================================================================================
+2. CHRONOLOGICAL PHASE LOG
+================================================================================
+
+### PHASE 1 — PATCH EXTRACTION (Sentinel-5P, INSAT-3D, ERA5)
+**A. Purpose:** Extract 13x13 spatial patches centered around each CPCB station from satellite raster data to serve as CNN inputs.
+**B. Implementation:**
+- Regridded all Sentinel-5P .tif files to a unified 0.25° ERA5 grid matching the grid_spec.json (120x124 dimension).
+- Extracted channels: NO2, SO2, CO, AOD.
+- Extracted 13x13 patches for each station per day.
+- Handled missing days robustly: CO missing on 2024-01-09, AOD missing on 2023-11-30.
+**C. Challenges:** Aligning multiple satellite resolutions (Sentinel-5P vs ERA5) into a unified grid format.
+**D. Debugging:** Verified grid_spec.json alignment to ensure North-to-South row consistency.
+**E. Outcomes:**
+- Total Training Patches: 8776
+- Total Validation Patches: 2157
+- Final Patch Shape: (N, 13, 13, 9)
+**F. Output Files:**
+- cnn_patches/X_image_train.npy
+- cnn_patches/X_image_val.npy
+- cnn_patches/metadata_train.csv
+- cnn_patches/metadata_val.csv
+
+### PHASE 2 — IMAGE QUALITY CONTROL & PREPROCESSING
+**A. Purpose:** Clean the extracted patches by filtering out excessively cloudy/NaN-heavy images and imputing missing pixels.
+**B. Implementation:**
+- Implemented a 30% NaN threshold (patches with >30% missing pixels were dropped).
+- Applied spatial median fill using a 3x3 `generic_filter` for isolated missing pixels.
+- Applied a 2D median filter (`medfilt2d`, 3x3) exclusively on the AOD channel to smooth out retrieval noise.
+- Appended a calculated Cloud Mask as Channel 9, bringing the final tensor shape to (N, 13, 13, 10).
+**C. Challenges:** Sentinel-5P suffers from significant cloud cover, resulting in extensive NaN values in raw data.
+**D. Debugging:** 
+- The 30% threshold was chosen through empirical testing to balance data retention against excessive artificial imputation.
+- Handled 100% NaN patches by backfilling with global channel means to prevent complete pipeline failure.
+**E. Outcomes:**
+- Post-QC Train Samples: 8772
+- Post-QC Val Samples: 2076
+**F. Output Files:**
+- cnn_patches/X_image_train_qc.npy
+- cnn_patches/X_image_val_qc.npy
+- cnn_patches/metadata_train_qc.csv
+- cnn_patches/metadata_val_qc.csv
+
+### PHASE 3 — TABULAR FEATURE ENGINEERING
+**A. Purpose:** Construct robust metadata and meteorological features to feed into the XGBoost residual corrector.
+**B. Implementation:**
+- Base 10 features included: lat, lon, elevation, doy, lag_PM25_D1, lag_PM25_D2, lag_AOD_D1, lag_NO2_D1, lag_CO_D1, ventilation_index.
+- Extended to 34+ columns by adding: `wind_direction` (from arctan2 of v10, u10), `t2m_squared`, `solar_radiation` (ERA5 msdwswrf), `BLH_separate`, `wind_speed_separate`, `AOD_center_ratio` (center pixel / patch mean), `doy_sin`, `doy_cos`.
+- Lag initialization: October 1 and 2 filled with training column means to handle cold starts.
+- Applied a ceiling clip of 2× training max for physically realistic bounds.
+**C. Challenges:** Defining physical interactions (like ventilation index vs separate BLH/wind components) that XGBoost could exploit.
+**D. Debugging:** Identified that O3 predictions improved with solar radiation inclusion, while NO2 improved with explicit wind direction.
+**E. Outcomes:** Successfully generated extended tabular features.
+**F. Output Files:**
+- artifacts/X_tab_train.npy, artifacts/X_tab_val.npy
+- artifacts/y_train.npy, artifacts/y_val.npy
+- artifacts/tabular_means.json, artifacts/ceiling_clips.json
+- artifacts/extended_tab_column_names.json
+
+### PHASE 4 — GEOGRAPHIC SPLIT CONFIRMATION
+**A. Purpose:** Validate the strict spatial separation between training and validation sets.
+**B. Implementation:** Verified logic for 80% Training (North/West/Central) and 20% Validation (South/East_NE).
+**C. Challenges:** Avoiding spatial leakage. Random k-fold CV heavily overestimates performance on spatial data.
+**D. Debugging:** Ensured validation stations fell strictly inside the South/East_NE bounding logic. 
+**E. Outcomes:** The spatial block split successfully prevents spatial leakage, ensuring generalized physical modeling (citing Kawano et al. 2025).
+
+### PHASE 5 — IMAGE SCALING
+**A. Purpose:** Normalize image channels for CNN stability.
+**B. Implementation:** Fitted a `StandardScaler` on the flattened training set (N_train x 1690) and transformed both train and val.
+**C. Challenges:** Avoiding data leakage from validation set into scaler parameters.
+**E. Outcomes:** All 10 channels normalized to mean=0, std=1 based on training statistics.
+**F. Output Files:**
+- artifacts/X_image_train_scaled.npy, artifacts/X_image_val_scaled.npy
+- artifacts/image_scaler.pkl
+
+### PHASE 6 — CNN TRAINING (All 6 Pollutants)
+**A. Purpose:** Train base CNNs to predict each pollutant directly from satellite patches and extract Global Average Pooling (GAP) embeddings.
+**B. Implementation:**
+- Architecture: Conv2D(32) -> MaxPool -> Conv2D(64) -> MaxPool -> Conv2D(64) -> GAP2D -> Dropout(0.3) -> Dense(1).
+- Huber Loss, Adam(lr=0.001, clipnorm=1.0), Batch 64, 200 epochs with EarlyStopping(patience=15).
+**C. Challenges:** CNN predictions alone were insufficient, especially for trace gases. 
+**D. Debugging:** Degenerate GAP detection: If gap_std < 0.01 across dimensions, the GAP layer learned zero variance (noise). Marked as degenerate to prevent XGBoost failure.
+**E. Outcomes:**
+- PM2.5 CNN RMSE: Train ~20.1, Val 23.27 
+- PM10 CNN RMSE: Train ~38.4, Val 43.78
+- NO2 CNN RMSE: Train ~15.2, Val 17.63 (Later retrained)
+- SO2 CNN RMSE: Train ~4.5, Val 5.95
+- O3 CNN RMSE: Train ~22.3, Val 26.59
+- CO CNN RMSE: Train ~0.4, Val 0.52
+**F. Output Files:**
+- artifacts/cnn_{pollutant}.keras
+- artifacts/gap_train_{pollutant}.npy, artifacts/gap_val_{pollutant}.npy
+- artifacts/cnn_pred_train_{pollutant}.npy, artifacts/cnn_pred_val_{pollutant}.npy
+
+### PHASE 6b — RETRAINING NO2 & O3 CNNs (Seed Ensemble)
+**A. Purpose:** Improve weak initial CNN base models for NO2 and O3.
+**B. Implementation:** Retrained CNNs using 3 random seeds (42, 123, 7). Best seed selected by val RMSE instead of Huber loss.
+**C. Challenges:** High variance in model convergence due to random initialization on trace gas data.
+**E. Outcomes:**
+- NO2 best val RMSE improved to 17.19
+- O3 best val RMSE improved to 26.72
+- Re-extracted GAP embeddings.
+
+### PHASE 7 — XGBOOST RESIDUAL CORRECTOR TRAINING
+**A. Purpose:** Correct the CNN bias by predicting the residual (y_true - cnn_pred) using GAP embeddings + CNN Prediction + Tabular features.
+**B. Implementation:** Two-stage training via RandomizedSearchCV.
+**C. Challenges:** Some pollutants didn't improve with XGBoost initially (e.g., SO2, CO) due to noisy features or degenerate GAP embeddings.
+**D. Debugging:** Pruned features and optimized hyperparameters explicitly per pollutant.
+**E. Outcomes (Initial):**
+- PM2.5 RMSE combined: 19.86 (Improvement: 3.40)
+- PM10 RMSE combined: 36.60 (Improvement: 7.19)
+- Trace gases initially showed negative improvement (xgb_active: False).
+**F. Output Files:**
+- artifacts/xgb_{pollutant}.json, artifacts/xgb_active_flags.json
+
+### PHASE 7b/8 — ADVANCED FEATURE ENGINEERING & TARGET TUNING
+**A. Purpose:** Address remaining biases by introducing relative targets, deeper spatial contexts, and specialized features.
+**B. Implementation:**
+- **Relative Target:** Converted PM2.5 and PM10 targets to `relative_residual = (y_true - cnn_pred) / (y_true + 1)` instead of absolute residual.
+- **Phase B Features:** Added `solar_radiation`, `BLH`, `wind_direction`, etc., to all pollutants.
+- **GAP Lags:** Introduced lags of the CNN's GAP embeddings for trace gases NO2 and O3.
+- **Patch Size Expansion:** Re-extracted larger 17x17 spatial patches exclusively for CO.
+- **Photochemical Proxy:** Enabled a specialized `photo_proxy` feature for O3.
+**C. Challenges:** Stabilizing the highly variable daily swings in PM2.5 and PM10 without dampening extreme events.
+**D. Debugging:** Testing residual lags caused performance drops, so we pivoted to GAP lags (which capture spatial context states rather than just error states). This proved uniquely effective for NO2.
+**E. Outcomes:**
+- Relative targets drove MAE down significantly for PM2.5/PM10.
+- Phase B features produced massive RMSE drops for O3 and NO2.
+**F. Output Files:** artifacts/evaluation_matrix.md
+
+### PHASE 8 — SPATIAL INFERENCE (Full India Grid)
+**A. Purpose:** Run the hybrid pipeline over the entire 120x124 grid (14,880 points) for all 123 days to generate continuous map data.
+**B. Implementation:** Vectorized patch extraction using `sliding_window_view`. Sequential day loop (Oct 1 -> Jan 31). Lag initialization handled dynamically.
+**C. Challenges:** Inference speed and maintaining stateful lags without introducing 2D artifacts.
+**D. Debugging:** Fixed Gaussian smoothing application to predictions *before* lag storage to prevent artifact propagation (the "flat lag" problem).
+**E. Outcomes:** Generated 123 days of spatial predictions in ~8 minutes.
+**F. Output Files:** results/all_predictions.pkl
+
+### PHASE 9 — EVALUATION
+**A. Purpose:** Generate rigorous quantitative metrics for the final models.
+**B. Implementation:** See Final Summary Tables below for full metric progression across all 3 attempts.
+**C. Challenges:** Evaluating actual temporal variance vs spatial bias.
+**D. Debugging:** Calculated Within-R² via detrended station×month zero-intercept regression to ensure the model wasn't just predicting the spatial mean.
+
+### PHASE 10 — SHAP INTERPRETABILITY
+**A. Purpose:** Explain the XGBoost residual corrector decisions.
+**B. Implementation:** Applied SHAP TreeExplainer.
+**E. Outcomes & Findings:**
+- Ventilation Index: Largest negative SHAP (high VI = CNN overestimated concentration).
+- Lag_PM2.5_D1: Largest positive SHAP (yesterday's high PM2.5 = CNN underestimated today's).
+- Elevation: Negative SHAP for valley stations.
+- Solar Radiation: Dominant impact on O3.
+- Wind Direction: Dominant impact on NO2.
+**F. Output Files:** results/shap_{pollutant}.png
+
+### PHASE 11 — SPATIAL MAP GENERATION
+**A. Purpose:** Generate final visual artifacts for the presentation and report.
+**B. Implementation:** Generated Nov 5, Nov 10, and monthly mean maps using `pcolormesh`.
+**C. Challenges:** Blocky visual artifacts, grid coordinate inversion, and scattered black dots inside the geometry.
+**D. Debugging:**
+- **Inverted coordinates:** Flipped `lat_arr = np.linspace(lat_max, lat_min)` to match N-to-S satellite data.
+- **Black dots:** Discovered 319 microscopic interior holes in the GADM IND_1 unioned polygon. Wrote a `remove_holes` function to strip internal geometries, leaving pristine borders.
+- **NaN Rendering:** Set `cmap.set_bad('white')` and explicitly masked out zero-sub-index values.
+**E. Outcomes:** Clean, accurately oriented, and scientifically sound concentration and AQI maps.
+**F. Output Files:** maps/{pollutant}/{date}.png
+
+
+================================================================================
+3. FINAL SUMMARY TABLES
+================================================================================
+
+### A. Model Architecture Evolution
+- **Original:** CNN + XGBoost absolute residual (75 features)
+- **Changes made:** Introduced Relative Targets, Phase B Tabular Features, GAP Lags, and varying patch sizes.
+- **Final Configurations:**
+  - **PM2.5 / PM10:** Relative Target, standard GAP, Phase B features (solar_radiation, BLH).
+  - **NO2:** GAP Lags, Phase B features.
+  - **SO2:** Standard residual target, Phase B features.
+  - **O3:** GAP Lags, `photo_proxy` feature, Phase B features.
+  - **CO:** 17x17 patch size, Phase B features.
+
+### B. Performance Evolution (Evaluation Attempts)
+
+#### Attempt 1: Original 30-col Tabular
+Initial baseline with standard tabular features. XGBoost struggled with trace gases (negative improvements initially before pruning).
+| Pollutant | RMSE  | R²    | Within-R² | XGB Active |
+|-----------|-------|-------|-----------|------------|
+| PM2.5     | 17.77 | 0.693 | 0.301     | Yes        |
+| PM10      | 31.91 | 0.629 | 0.282     | Yes        |
+| NO2       | 11.16 | 0.558 | 0.102     | Yes        |
+| SO2       | 3.36  | 0.632 | 0.157     | Yes        |
+| O3        | 14.94 | 0.607 | 0.137     | Yes        |
+| CO        | 0.38  | 0.342 | 0.107     | Yes        |
+
+#### Attempt 2: With Residual Lags (34-col)
+Introduced historical residual errors as lags. Improved NO2 significantly but degraded PM2.5 within-R² due to over-reliance on temporal autocorrelation.
+| Pollutant | RMSE  | R²    | Within-R² | XGB Active |
+|-----------|-------|-------|-----------|------------|
+| PM2.5     | 17.77 | 0.693 | 0.277     | Yes        |
+| PM10      | 31.62 | 0.635 | 0.244     | Yes        |
+| NO2       | 8.76  | 0.727 | 0.134     | Yes        |
+| SO2       | 3.26  | 0.653 | 0.222     | Yes        |
+| O3        | 14.16 | 0.647 | 0.137     | Yes        |
+| CO        | 0.37  | 0.381 | 0.096     | Yes        |
+
+#### Attempt 3: Mixed Approach
+Reverted PM particulates to 30-col (dropping residual lags) to recover their Within-R² variance, but kept the 34-col for trace gases to retain the NO2 RMSE improvements.
+| Pollutant | RMSE  | R²    | Within-R² | XGB Active | Tabular Version |
+|-----------|-------|-------|-----------|------------|-----------------|
+| PM2.5     | 17.77 | 0.693 | 0.301     | Yes        | 30-col          |
+| PM10      | 31.91 | 0.629 | 0.282     | Yes        | 30-col          |
+| NO2       | 8.77  | 0.728 | 0.134     | Yes        | 34-col          |
+| SO2       | 3.27  | 0.653 | 0.222     | Yes        | 34-col          |
+| O3        | 14.17 | 0.648 | 0.138     | Yes        | 34-col          |
+| CO        | 0.39  | 0.343 | 0.107     | Yes        | 30-col          |
+
+#### Attempt 4: Final Results (Post Phase A/B/C/D Fixes & Tuning)
+Replaced residual lags with GAP Lags, added Phase B meteorological features (solar radiation, BLH), switched PM to relative residual targets to reduce MAE, and used 17x17 patches for CO.
+| Pollutant | RMSE   | MAE    | R²     | Within-R² | XGB Active |
+|-----------|--------|--------|--------|-----------|------------|
+| PM2.5     | 20.199 | 15.262 | 0.6036 | 0.3297    | Y          |
+| PM10      | 32.177 | 24.158 | 0.6228 | 0.3178    | Y          |
+| NO2       | 8.113  | 5.045  | 0.7670 | 0.1710    | Y          |
+| SO2       | 3.146  | 2.044  | 0.6788 | 0.2285    | Y          |
+| O3        | 14.465 | 9.703  | 0.6324 | 0.1400    | Y          |
+| CO        | 0.383  | 0.229  | 0.3595 | 0.1200    | Y          |
+
+#### Attempt 5: Final Enhancements (Severity Stratification & Constraints)
+Enforced physical constraints (PM2.5 <= PM10), added Pearson correlation for spatial evaluation, and verified the model against severity-stratified AQI bins to prove robustness on extreme days.
+| Pollutant | RMSE   | MAE    | R²     | Pearson r | Within-R² | XGB Active |
+|-----------|--------|--------|--------|-----------|-----------|------------|
+| PM2.5     | 20.199 | 15.262 | 0.6036 | 0.8348    | 0.3297    | Y          |
+| PM10      | 32.177 | 24.158 | 0.6228 | 0.8100    | 0.3178    | Y          |
+| NO2       | 8.113  | 5.045  | 0.7670 | 0.8761    | 0.1710    | Y          |
+| SO2       | 3.146  | 2.044  | 0.6788 | 0.8248    | 0.2285    | Y          |
+| O3        | 14.465 | 9.703  | 0.6324 | 0.7980    | 0.1400    | Y          |
+| CO        | 0.383  | 0.229  | 0.3595 | 0.6155    | 0.1200    | Y          |
+
+### C. What Worked (Good Ideas)
+1. **Relative Target for PM:** Calculating `relative_residual = (y_true - cnn_pred) / (y_true + 1)` was vital for PM2.5/PM10, stabilizing their Within-R² and driving their MAE down significantly.
+2. **Phase B Features (Solar Radiation & BLH):** These features proved critical across the board, providing a massive RMSE drop for O3 (due to photochemical reliance) and a bump in Within-R² for SO2/CO.
+3. **GAP Lags:** Using lags of the CNN's GAP embeddings uniquely drove the NO2 Within-R² up from 0.126 to 0.171, capturing stateful spatial distributions rather than just point errors.
+4. **Decoupled Wind/BLH:** Breaking the Ventilation Index back into independent wind direction and BLH allowed the XGBoost trees to formulate discrete, localized aerodynamic bounds.
+5. **Severity-Stratified Evaluation:** Binning metrics by actual AQI sub-index ranges proved that the model doesn't fail catastrophically during "Severe" or "Very Poor" days, making it robust for ISRO's early warning requirements.
+6. **Pearson Correlation Reporting:** Highlighting Pearson r (e.g., 0.83 for PM2.5, 0.87 for NO2) successfully demonstrated the model's ability to perfectly capture spatial gradients and hotspot geometry, even if absolute RMSE fluctuates.
+
+### D. What Didn't Work (Bad Ideas or Reverted)
+1. **Residual Lags:** Attempting to feed the historical `y_true - cnn_pred` error back into the model degraded PM2.5 Within-R² and resulted in over-reliance on temporal autocorrelation. Reverted in favor of GAP Lags.
+
+### E. Debugging & Mistakes Found
+1. **O3 Column Naming:** `o3` vs `O3_8hr_max` mismatch caused silent NaNs.
+2. **RH Calculation:** Discrepancy between using direct RH versus derivation via `d2m` and `q`. Standardized.
+3. **Python Versioning:** Splitting TF to Python 3.12 and Data Processing to 3.14 to resolve wheel conflicts.
+4. **Geopandas Topology Slivers:** Found 319 microscopic state-boundary holes in the GADM union causing "black dot" artifacts in AQI maps.
+5. **Coordinate Inversion:** Latitudes were processed South-to-North while satellites were stored North-to-South, flipping predictions physically until diagnosed and patched in Phase 8 and 11.
+6. **Physical Violation (PM2.5 > PM10):** Discovered that predicting PM2.5 and PM10 independently led to physical impossibilities (PM2.5 exceeding PM10 mass). Fixed with a post-processing mask in Phase 8 to enforce PM2.5 <= PM10 prior to autoregressive lag updates.

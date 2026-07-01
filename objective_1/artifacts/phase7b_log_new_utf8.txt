@@ -1,0 +1,75 @@
+﻿============================================================
+  Phase 7b -- Retrain XGBoost (relative residual, 34/30-col features)
+============================================================
+  GAP flags:   {'CO': True}
+
+------------------------------------------------------------
+  XGBoost for: PM2.5
+------------------------------------------------------------
+  Target: RELATIVE residual  mean=0.2703, std=0.5749, max=3.5744
+  Tab cols (19): ['lat', 'lon', 'elevation', 'doy', 'lag_PM25_D1', 'lag_PM25_D2', 'lag_AOD_D1', 'lag_NO2_D1', 'lag_CO_D1', 'ventilation_index', 'wind_direction', 't2m_squared', 'AOD_center', 'NO2_center', 'solar_radiation', 'BLH_center', 'wind_speed_center', 'AOD_center_ratio', 'RH_center']
+  XGB features total: 212
+  Train: 6208, Val: 1473
+  CV best params: {'subsample': 1.0, 'reg_lambda': 5.0, 'reg_alpha': 0.01, 'n_estimators': 400, 'min_child_weight': 7, 'max_depth': 8, 'learning_rate': 0.1, 'colsample_bytree': 0.6}
+  Final n_estimators: 65
+  Total time: 342.1s
+  RMSE CNN-only: 23.2672
+  RMSE CNN+XGB:  20.1720
+  Improvement:   3.0952 (BETTER)
+  -> XGB ACTIVE for PM2.5
+
+------------------------------------------------------------
+  XGBoost for: PM10
+------------------------------------------------------------
+  Target: RELATIVE residual  mean=0.0962, std=0.3680, max=2.5101
+  Tab cols (20): ['lat', 'lon', 'elevation', 'doy', 'lag_PM10_D1', 'lag_PM10_D2', 'lag_AOD_D1', 'lag_NO2_D1', 'lag_CO_D1', 'ventilation_index', 'wind_direction', 't2m_squared', 'AOD_center', 'NO2_center', 'solar_radiation', 'doy_solar_phase', 'BLH_center', 'wind_speed_center', 'AOD_center_ratio', 'RH_center']
+  XGB features total: 213
+  Train: 6210, Val: 1474
+  CV best params: {'subsample': 0.9, 'reg_lambda': 5.0, 'reg_alpha': 0.1, 'n_estimators': 500, 'min_child_weight': 3, 'max_depth': 6, 'learning_rate': 0.03, 'colsample_bytree': 0.9}
+  Final n_estimators: 111
+  Total time: 331.5s
+  RMSE CNN-only: 43.7838
+  RMSE CNN+XGB:  33.3088
+  Improvement:   10.4750 (BETTER)
+  -> XGB ACTIVE for PM10
+
+------------------------------------------------------------
+  XGBoost for: SO2
+------------------------------------------------------------
+  Target: ABSOLUTE residual  mean=6.1085, std=17.8334, max=172.9721
+  Tab cols (25): ['lat', 'lon', 'elevation', 'doy', 'doy_sin', 'doy_cos', 'lag_SO2_D1', 'lag_SO2_D2', 'lag_AOD_D1', 'lag_CO_D1', 'ventilation_index', 'wind_direction', 't2m_squared', 'AOD_center', 'SO2_center', 'lag_residual_D1', 'lag_residual_D2', 'lag_cnn_pred_D1', 'lag_cnn_pred_D2', 'solar_radiation', 'doy_solar_phase', 'BLH_center', 'wind_speed_center', 'AOD_center_ratio', 'RH_center']
+  XGB features total: 218
+  Train: 6210, Val: 1475
+  CV best params: {'subsample': 0.8, 'reg_lambda': 1.0, 'reg_alpha': 0, 'n_estimators': 300, 'min_child_weight': 1, 'max_depth': 4, 'learning_rate': 0.08, 'colsample_bytree': 0.9}
+  Final n_estimators: 44
+  Total time: 192.0s
+  RMSE CNN-only: 5.9529
+  RMSE CNN+XGB:  3.3193
+  Improvement:   2.6336 (BETTER)
+  -> XGB ACTIVE for SO2
+
+------------------------------------------------------------
+  XGBoost for: O3
+------------------------------------------------------------
+  Target: ABSOLUTE residual  mean=8.1068, std=23.5505, max=135.5579
+  Tab cols (21): ['lat', 'lon', 'elevation', 'doy', 'doy_sin', 'doy_cos', 'lag_O3_D1', 'lag_O3_D2', 'ventilation_index', 'wind_direction', 't2m_squared', 'NO2_center', 'lag_residual_D1', 'lag_residual_D2', 'lag_cnn_pred_D1', 'lag_cnn_pred_D2', 'doy_solar_phase', 'BLH_center', 'wind_speed_center', 'AOD_center_ratio', 'photo_proxy']
+  XGB features total: 214
+  Train: 6219, Val: 1477
+  CV best params: {'subsample': 0.9, 'reg_lambda': 5.0, 'reg_alpha': 0.1, 'n_estimators': 500, 'min_child_weight': 3, 'max_depth': 6, 'learning_rate': 0.03, 'colsample_bytree': 0.9}
+  Final n_estimators: 510
+  Total time: 235.6s
+  RMSE CNN-only: 26.7198
+  RMSE CNN+XGB:  14.4653
+  Improvement:   12.2545 (BETTER)
+  -> XGB ACTIVE for O3
+
+============================================================
+  Phase 7b COMPLETE
+  XGB active flags: {'PM2.5': True, 'PM10': True, 'NO2': True, 'SO2': True, 'O3': True, 'CO': True}
+     PM2.5: CNN=23.267 -> CNN+XGB=20.172 [ACTIVE]
+      PM10: CNN=43.784 -> CNN+XGB=33.309 [ACTIVE]
+       NO2: CNN=17.189 -> CNN+XGB=8.113 [ACTIVE]
+       SO2: CNN=5.953 -> CNN+XGB=3.319 [ACTIVE]
+        O3: CNN=26.720 -> CNN+XGB=14.465 [ACTIVE]
+        CO: CNN=0.539 -> CNN+XGB=0.383 [ACTIVE]
+============================================================

@@ -1,0 +1,5 @@
+{
+  "PM2.5": true,
+  "PM10": true,
+  "SO2": false
+}
