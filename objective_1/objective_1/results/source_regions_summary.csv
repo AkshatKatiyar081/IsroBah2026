@@ -1,0 +1,5 @@
+Region,Hotspot_Days,Total_Fire_Count,Mean_HCHO_mol_m2,Pearson_r,Pearson_p,Peak_HCHO_Date,Mean_FRP_MW,Consensus_Hotspot_Pct
+SW Punjab (Bathinda-Muktsar),10,22562,0.00024214,0.40494594,0.02150164,01/11/2023,9.347238,77.5
+Central Punjab Valley (Ludhiana-Patiala),9,11452,0.000223737,0.2441321,0.17812417,01/11/2023,8.726231,97.91666667
+S Haryana (Hisar-Karnal),16,8849,0.000253447,0.44259876,0.011191811,31/10/2023,7.015524,98.4375
+W Uttar Pradesh (Saharanpur-Meerut),18,1714,0.000239402,-0.06694649,0.715822,07/11/2023,3.6358633,95

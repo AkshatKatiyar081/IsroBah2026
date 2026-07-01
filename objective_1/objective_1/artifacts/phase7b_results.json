@@ -1,0 +1,98 @@
+{
+  "PM2.5": {
+    "rmse_cnn": 23.267218663937225,
+    "rmse_combined": 20.198507514431526,
+    "improvement": 3.068711149505699,
+    "xgb_active": true,
+    "best_params": {
+      "subsample": 1.0,
+      "reg_lambda": 5.0,
+      "reg_alpha": 0.01,
+      "n_estimators": 400,
+      "min_child_weight": 7,
+      "max_depth": 8,
+      "learning_rate": 0.1,
+      "colsample_bytree": 0.6
+    }
+  },
+  "PM10": {
+    "rmse_cnn": 43.783813662895874,
+    "rmse_combined": 32.17701778650117,
+    "improvement": 11.606795876394706,
+    "xgb_active": true,
+    "best_params": {
+      "subsample": 0.6,
+      "reg_lambda": 5.0,
+      "reg_alpha": 1.0,
+      "n_estimators": 500,
+      "min_child_weight": 2,
+      "max_depth": 6,
+      "learning_rate": 0.03,
+      "colsample_bytree": 0.9
+    }
+  },
+  "NO2": {
+    "rmse_cnn": 17.189290567242097,
+    "rmse_combined": 8.112534100618094,
+    "improvement": 9.076756466624003,
+    "xgb_active": true,
+    "best_params": {
+      "subsample": 0.8,
+      "reg_lambda": 1.0,
+      "reg_alpha": 0,
+      "n_estimators": 300,
+      "min_child_weight": 1,
+      "max_depth": 4,
+      "learning_rate": 0.08,
+      "colsample_bytree": 0.9
+    }
+  },
+  "SO2": {
+    "rmse_cnn": 5.952941411108612,
+    "rmse_combined": 3.145766419631681,
+    "improvement": 2.807174991476931,
+    "xgb_active": true,
+    "best_params": {
+      "subsample": 0.8,
+      "reg_lambda": 1.0,
+      "reg_alpha": 0,
+      "n_estimators": 300,
+      "min_child_weight": 1,
+      "max_depth": 4,
+      "learning_rate": 0.08,
+      "colsample_bytree": 0.9
+    }
+  },
+  "O3": {
+    "rmse_cnn": 26.71977794075252,
+    "rmse_combined": 14.465285741289332,
+    "improvement": 12.25449219946319,
+    "xgb_active": true,
+    "best_params": {
+      "subsample": 0.9,
+      "reg_lambda": 5.0,
+      "reg_alpha": 0.1,
+      "n_estimators": 500,
+      "min_child_weight": 3,
+      "max_depth": 6,
+      "learning_rate": 0.03,
+      "colsample_bytree": 0.9
+    }
+  },
+  "CO": {
+    "rmse_cnn": 0.5394123987380369,
+    "rmse_combined": 0.3828612705226291,
+    "improvement": 0.15655112821540784,
+    "xgb_active": true,
+    "best_params": {
+      "subsample": 0.8,
+      "reg_lambda": 2.0,
+      "reg_alpha": 0,
+      "n_estimators": 500,
+      "min_child_weight": 7,
+      "max_depth": 8,
+      "learning_rate": 0.01,
+      "colsample_bytree": 0.7
+    }
+  }
+}

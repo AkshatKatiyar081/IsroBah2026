@@ -1,0 +1,617 @@
+[
+  {
+    "date": "20231001",
+    "n_violations": 301,
+    "pct_grid": 2.0228494623655915
+  },
+  {
+    "date": "20231002",
+    "n_violations": 387,
+    "pct_grid": 2.6008064516129035
+  },
+  {
+    "date": "20231003",
+    "n_violations": 293,
+    "pct_grid": 1.9690860215053765
+  },
+  {
+    "date": "20231004",
+    "n_violations": 321,
+    "pct_grid": 2.157258064516129
+  },
+  {
+    "date": "20231005",
+    "n_violations": 143,
+    "pct_grid": 0.9610215053763441
+  },
+  {
+    "date": "20231006",
+    "n_violations": 120,
+    "pct_grid": 0.8064516129032258
+  },
+  {
+    "date": "20231007",
+    "n_violations": 132,
+    "pct_grid": 0.8870967741935484
+  },
+  {
+    "date": "20231008",
+    "n_violations": 131,
+    "pct_grid": 0.8803763440860215
+  },
+  {
+    "date": "20231009",
+    "n_violations": 70,
+    "pct_grid": 0.47043010752688175
+  },
+  {
+    "date": "20231010",
+    "n_violations": 59,
+    "pct_grid": 0.39650537634408606
+  },
+  {
+    "date": "20231011",
+    "n_violations": 29,
+    "pct_grid": 0.19489247311827956
+  },
+  {
+    "date": "20231012",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231013",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231014",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231015",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231016",
+    "n_violations": 22,
+    "pct_grid": 0.1478494623655914
+  },
+  {
+    "date": "20231017",
+    "n_violations": 6,
+    "pct_grid": 0.04032258064516129
+  },
+  {
+    "date": "20231018",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231019",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231020",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231021",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231022",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231023",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231024",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231025",
+    "n_violations": 5,
+    "pct_grid": 0.03360215053763441
+  },
+  {
+    "date": "20231026",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231027",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231028",
+    "n_violations": 12,
+    "pct_grid": 0.08064516129032258
+  },
+  {
+    "date": "20231029",
+    "n_violations": 10,
+    "pct_grid": 0.06720430107526883
+  },
+  {
+    "date": "20231030",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231031",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231101",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231102",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231103",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231104",
+    "n_violations": 18,
+    "pct_grid": 0.12096774193548387
+  },
+  {
+    "date": "20231105",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231106",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231107",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231108",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231109",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231110",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231111",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231112",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231113",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231114",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231115",
+    "n_violations": 7,
+    "pct_grid": 0.04704301075268817
+  },
+  {
+    "date": "20231116",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231117",
+    "n_violations": 17,
+    "pct_grid": 0.114247311827957
+  },
+  {
+    "date": "20231118",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231119",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231120",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231121",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231122",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231123",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231124",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231125",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231126",
+    "n_violations": 4,
+    "pct_grid": 0.026881720430107527
+  },
+  {
+    "date": "20231127",
+    "n_violations": 13,
+    "pct_grid": 0.08736559139784947
+  },
+  {
+    "date": "20231128",
+    "n_violations": 6,
+    "pct_grid": 0.04032258064516129
+  },
+  {
+    "date": "20231129",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231130",
+    "n_violations": 36,
+    "pct_grid": 0.24193548387096775
+  },
+  {
+    "date": "20231201",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231202",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231203",
+    "n_violations": 59,
+    "pct_grid": 0.39650537634408606
+  },
+  {
+    "date": "20231204",
+    "n_violations": 103,
+    "pct_grid": 0.6922043010752688
+  },
+  {
+    "date": "20231205",
+    "n_violations": 113,
+    "pct_grid": 0.7594086021505376
+  },
+  {
+    "date": "20231206",
+    "n_violations": 160,
+    "pct_grid": 1.0752688172043012
+  },
+  {
+    "date": "20231207",
+    "n_violations": 104,
+    "pct_grid": 0.6989247311827957
+  },
+  {
+    "date": "20231208",
+    "n_violations": 67,
+    "pct_grid": 0.45026881720430106
+  },
+  {
+    "date": "20231209",
+    "n_violations": 7,
+    "pct_grid": 0.04704301075268817
+  },
+  {
+    "date": "20231210",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231211",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231212",
+    "n_violations": 2,
+    "pct_grid": 0.013440860215053764
+  },
+  {
+    "date": "20231213",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231214",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231215",
+    "n_violations": 65,
+    "pct_grid": 0.43682795698924726
+  },
+  {
+    "date": "20231216",
+    "n_violations": 63,
+    "pct_grid": 0.4233870967741936
+  },
+  {
+    "date": "20231217",
+    "n_violations": 26,
+    "pct_grid": 0.17473118279569894
+  },
+  {
+    "date": "20231218",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231219",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231220",
+    "n_violations": 7,
+    "pct_grid": 0.04704301075268817
+  },
+  {
+    "date": "20231221",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231222",
+    "n_violations": 79,
+    "pct_grid": 0.5309139784946236
+  },
+  {
+    "date": "20231223",
+    "n_violations": 4,
+    "pct_grid": 0.026881720430107527
+  },
+  {
+    "date": "20231224",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231225",
+    "n_violations": 7,
+    "pct_grid": 0.04704301075268817
+  },
+  {
+    "date": "20231226",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231227",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231228",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231229",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231230",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20231231",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240101",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240102",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240103",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240104",
+    "n_violations": 5,
+    "pct_grid": 0.03360215053763441
+  },
+  {
+    "date": "20240105",
+    "n_violations": 50,
+    "pct_grid": 0.33602150537634407
+  },
+  {
+    "date": "20240106",
+    "n_violations": 16,
+    "pct_grid": 0.10752688172043011
+  },
+  {
+    "date": "20240107",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240108",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240109",
+    "n_violations": 95,
+    "pct_grid": 0.6384408602150538
+  },
+  {
+    "date": "20240110",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240111",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240112",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240113",
+    "n_violations": 1,
+    "pct_grid": 0.006720430107526882
+  },
+  {
+    "date": "20240114",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240115",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240116",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240117",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240118",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240119",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240120",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240121",
+    "n_violations": 12,
+    "pct_grid": 0.08064516129032258
+  },
+  {
+    "date": "20240122",
+    "n_violations": 26,
+    "pct_grid": 0.17473118279569894
+  },
+  {
+    "date": "20240123",
+    "n_violations": 11,
+    "pct_grid": 0.0739247311827957
+  },
+  {
+    "date": "20240124",
+    "n_violations": 1,
+    "pct_grid": 0.006720430107526882
+  },
+  {
+    "date": "20240125",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240126",
+    "n_violations": 3,
+    "pct_grid": 0.020161290322580645
+  },
+  {
+    "date": "20240127",
+    "n_violations": 6,
+    "pct_grid": 0.04032258064516129
+  },
+  {
+    "date": "20240128",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240129",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  },
+  {
+    "date": "20240130",
+    "n_violations": 3,
+    "pct_grid": 0.020161290322580645
+  },
+  {
+    "date": "20240131",
+    "n_violations": 0,
+    "pct_grid": 0.0
+  }
+]

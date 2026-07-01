@@ -1,5 +1,6 @@
-# Ignore large data and model files to prevent GitHub limits
+# Ignore large data and model files
 *.npy
 *.pkl
 *.keras
 __pycache__/
+data/regridded/
